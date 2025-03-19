@@ -30,7 +30,6 @@ function validateTask(event) {
 
   if (true) {
     storeValues();
-    displayTask();
   }
 
   return true;
@@ -75,31 +74,35 @@ function storeValues() {
   oldTasks.push(task);
   localStorage.setItem("tasks", JSON.stringify(oldTasks));
 
+  oldTasks.forEach((task) => {
+    tasksCreated.appendChild(createTask(task.newTaskName, task.newTaskDate));
+  });
+
   // Clear all form fields
   taskForm.reset();
 }
 
-function displayTask() {
-  const oldTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
+function createTask(newTaskName, newTaskDate) {
+  const frag = document.createDocumentFragment();
   let newEl = (s) => document.createElement(s);
 
-  oldTasks.forEach((task) => {
-    let taskDiv = tasksCreated.appendChild(newEl("div"));
-    taskDiv.classList.add("taskElement");
-    let taskName = taskDiv.appendChild(newEl("p"));
-    taskName.classList.add("taskss");
-    taskName.innerHTML = task.newTaskName;
-    let taskDate = taskDiv.appendChild(newEl("p"));
-    taskDate.classList.add("taskss");
-    taskDate.innerHTML = task.newTaskDate;
-    let taskComplete = taskDiv.appendChild(newEl("button"));
-    taskComplete.appendChild(document.createTextNode(`Mark as Done`));
-    taskComplete.classList.add("taskComplete");
-  });
+  let taskDiv = frag.appendChild(newEl("div"));
+  taskDiv.classList.add("taskElement");
+  let taskName = taskDiv.appendChild(newEl("p"));
+  taskName.classList.add("taskss");
+  taskName.textContent = `${newTaskName}`;
+  let taskDate = taskDiv.appendChild(newEl("p"));
+  taskDate.classList.add("taskss");
+  taskDate.textContent = `${newTaskDate}`;
+  let taskComplete = taskDiv.appendChild(newEl("button"));
+  taskComplete.appendChild(document.createTextNode(`Mark as Done`));
+  taskComplete.classList.add("taskComplete");
+
   taskCounter++;
-  taskCount.textContent = `${taskCounter}`;
-  alert("Task Added");
+    taskCount.textContent = `${taskCounter}`;
+    alert("Task Added");
+
+    return frag;
 }
 
 function deleteTask(event) {
@@ -115,6 +118,9 @@ function deleteTask(event) {
     taskCount.textContent = `${taskCounter}`;
   }
 }
+
 taskForm.addEventListener("submit", validateTask);
 
 tasksCreated.addEventListener("click", deleteTask);
+
+window.addEventListener("beforeunload", () => localStorage.removeItem("tasks"));

@@ -94,3 +94,16 @@ input[type="submit"] {
   border-radius: 4px;
 }
 
+.markAsDone {
+  border: 1px solid green;
+  padding: 10px 20px;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.taskHeading {
+  display:none;
+}
+
